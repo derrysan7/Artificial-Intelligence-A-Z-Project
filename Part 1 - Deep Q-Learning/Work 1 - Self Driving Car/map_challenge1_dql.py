@@ -147,7 +147,7 @@ class Game(Widget):
             last_reward = -1.4
         else: # otherwise
             self.car.velocity = Vector(6, 0).rotate(self.car.angle)
-            last_reward = -0.011
+            last_reward = -0.013
             if distance < last_distance:
                 last_reward = 0.1
 
