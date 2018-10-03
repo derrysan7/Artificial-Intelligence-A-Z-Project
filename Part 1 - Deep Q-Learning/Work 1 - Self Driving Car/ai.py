@@ -21,11 +21,12 @@ class Network(nn.Module):
         self.input_size = input_size
         self.nb_action = nb_action
         self.fc1 = nn.Linear(input_size, 30) #5 input layer and 30 hidden neuron in the hidden layer
-        self.fc2 = nn.Linear(30, nb_action) #30 hidden layer and 3 output layer
-        
+        self.fc2 = nn.Linear(30, 30) #2nd hidden layer
+        self.fc3 = nn.Linear(30, nb_action) #30 hidden layer and 3 output layer
     def forward(self, state):
         x = F.relu(self.fc1(state)) #x = hidden neuron, relu = rectifier function
-        q_values = self.fc2(x)
+        x = F.relu(self.fc2(x))
+        q_values = self.fc3(x)
         return q_values
     
 #Implementing Experience Replay
@@ -60,7 +61,7 @@ class Dqn():
         self.last_reward = 0
         
     def select_action(self, state):
-        probs = F.softmax(self.model(Variable(state, volatile = True))*7) #we won't be including the gradient with the input state using volatile true to save some memory ; T=7 (temporal parameter, closer to zero meaning the car will be less sure to take that action)
+        probs = F.softmax(self.model(Variable(state, volatile = True))*75) #we won't be including the gradient with the input state using volatile true to save some memory ; T=7 (temporal parameter, closer to zero meaning the car will be less sure to take that action)
         action = probs.multinomial() #will give us random draw from the distribution probs
         return action.data[0,0]
         
@@ -78,7 +79,7 @@ class Dqn():
         self.memory.push((self.last_state, new_state, torch.LongTensor([int(self.last_action)]), torch.Tensor([self.last_reward])))
         action = self.select_action(new_state)
         if len(self.memory.memory) > 100:
-            batch_state, batch_next_state, batch_reward, batch_action = self.memory.sample(100) #get 100 random batches from memory
+            batch_state, batch_next_state, batch_action, batch_reward = self.memory.sample(100) #get 100 random batches from memory
             self.learn(batch_state, batch_next_state, batch_reward, batch_action) #the learning happen
         self.last_action = action
         self.last_state = new_state
@@ -93,7 +94,7 @@ class Dqn():
 
     def save(self):
         torch.save({'state_dict': self.model.state_dict(),
-                    'optimizer': self.optimizer.state_dict(),
+                    'optimizer' : self.optimizer.state_dict(),
                     }, 'last_brain.pth')
     
     def load(self):
