@@ -68,7 +68,7 @@ class AI:
 
     def __call__(self, inputs):
         input_var = Variable(torch.from_numpy(np.array(inputs, dtype = np.float32)))
-        input_var = torch.unsqueeze(inputs, 0)
+        input_var = torch.unsqueeze(input_var, 0)
         output = self.brain(input_var)
         actions = self.body(output)
         return actions.data.numpy()
@@ -79,10 +79,10 @@ class AI:
 
 # Getting the Doom environment
 game = viz.DoomGame()
-game.load_config("D:\vizdoom\vizdoom115pre\scenarios\deadly_corridor.cfg")
+game.load_config("D:/vizdoom/vizdoom115pre/scenarios/deadly_corridor.cfg")
 
 # Load the correct scenario (in our case deadly_corridor scenario)
-game.set_doom_scenario_path("D:\vizdoom\vizdoom115pre\scenarios\deadly_corridor.wad")
+game.set_doom_scenario_path("D:/vizdoom/vizdoom115pre/scenarios/deadly_corridor.wad")
 
 game.set_screen_format(viz.ScreenFormat.GRAY8)
 game.init()
