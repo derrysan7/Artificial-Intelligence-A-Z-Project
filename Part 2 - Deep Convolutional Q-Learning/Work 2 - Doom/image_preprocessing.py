@@ -12,5 +12,5 @@ def preprocess_image(frame):
     
     #Resize the frame so it fits the model
     preprocessed_frame = transform.resize(normalized_frame, [80, 80])
-    preprocessed_frame = np.reshape(preprocessed_frame, [1, 80, 80])
+    preprocessed_frame = np.expand_dims(preprocessed_frame, 0) #preprocessed_frame = np.reshape(preprocessed_frame, [1, 80, 80])
     return preprocessed_frame
