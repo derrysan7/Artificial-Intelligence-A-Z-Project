@@ -34,7 +34,7 @@ def test(rank, params, shared_model):
         value, action_value, (hx, cx) = model((Variable(state.unsqueeze(0), volatile=True), (hx, cx)))
         prob = F.softmax(action_value)
         action = prob.max(1)[1].data.numpy() # the test agent does not explore, it directly plays the best action
-        state, reward, done, _ = env.step(action[0, 0]) # done = done or episode_length >= params.max_episode_length
+        state, reward, done, _ = env.step(action[0]) # done = done or episode_length >= params.max_episode_length
         reward_sum += reward
         if done: # printing the results at the end of each part
             print("Time {}, episode reward {}, episode length {}".format(time.strftime("%Hh %Mm %Ss", time.gmtime(time.time() - start_time)), reward_sum, episode_length))
