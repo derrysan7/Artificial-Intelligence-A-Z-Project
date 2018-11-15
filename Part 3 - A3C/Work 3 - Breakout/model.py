@@ -19,7 +19,7 @@ def weights_init(m):
         weight_shape = list(m.weight.data.size())
         fan_in = np.prod(weight_shape[1:4]) #dim1 * dim2 * dim3
         fan_out = np.prod(weight_shape[2:4])*weight_shape[0] #dim0 * dim2 * dim3
-        w_bound = np.sqrt(6. / fan_in + fan_out) #the size of the tensor of weights
+        w_bound = np.sqrt(6. / (fan_in + fan_out)) #the size of the tensor of weights
         m.weight.data.uniform_(-w_bound, w_bound) #generate random weight that inversely proporsional to the size of the tensor of weight
         m.bias.data.fill_(0) #the bias
     elif classname.find('Linear') != -1:
@@ -60,7 +60,7 @@ class ActorCritic(torch.nn.Module):
         x = F.elu(self.conv3(x))
         x = F.elu(self.conv4(x))
         x = x.view(-1, 32 * 3 * 3) #-1 = one dimensional vector
-        (hx, cx) = self.lstm(x, (hx, cx))
+        hx, cx = self.lstm(x, (hx, cx))
         x = hx
         return self.critic_linear(x), self.actor_linear(x), (hx, cx)
     
