@@ -38,9 +38,9 @@ def train(rank, params, shared_model, optimizer):
             value, action_values, (hx, cx) = model((Variable(state.unsqueeze(0)), (hx, cx)))
             prob = F.softmax(action_values)
             log_prob = F.log_softmax(action_values)
-            entropy = -(log_prob * prob).sum(1)
+            entropy = -(log_prob * prob).sum(1, keepdim=True)
             entropies.append(entropy)
-            action = prob.multinomial().data
+            action = prob.multinomial(num_samples = 1).data
             log_prob = log_prob.gather(1, Variable(action))
             values.append(value)
             log_probs.append(log_prob)

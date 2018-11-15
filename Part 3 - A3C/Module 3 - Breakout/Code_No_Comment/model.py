@@ -9,7 +9,7 @@ import torch.nn.functional as F
 # Initializing and setting the variance of a tensor of weights
 def normalized_columns_initializer(weights, std=1.0):
     out = torch.randn(weights.size())
-    out *= std / torch.sqrt(out.pow(2).sum(1).expand_as(out))
+    out *= std / torch.sqrt(out.pow(2).sum(1, keepdim=True).expand_as(out))
     return out
 
 # Initializing the weights of the neural network in an optimal way for the learning

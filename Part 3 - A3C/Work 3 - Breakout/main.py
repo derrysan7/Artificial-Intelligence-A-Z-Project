@@ -23,7 +23,7 @@ class Params():
         self.env_name = 'Breakout-v0'
 
 # Main run
-if __name__ =='__main__':
+if __name__ == '__main__':
     os.environ['OMP_NUM_THREADS'] = '1'
     params = Params()
     torch.manual_seed(params.seed)
